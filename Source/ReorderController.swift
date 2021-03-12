@@ -55,7 +55,7 @@ public protocol TableViewReorderDelegate: class {
      - Parameter tableView: The table view requesting this information.
      - Parameter indexPath: The index path of a row.
      */
-    func tableView(_ tableView: UITableView, canReorderRowAt indexPath: IndexPath) -> Bool
+    func tableView(_ tableView: UITableView, canReorderRowAt indexPath: IndexPath, touchPosition: CGPoint) -> Bool
     
     /**
      When attempting to move a row from a sourceIndexPath to a proposedDestinationIndexPath, asks the reorder delegate what the actual targetIndexPath should be. This allows the reorder delegate to selectively allow or modify reordering between sections or groups of rows, for example.
@@ -84,7 +84,7 @@ public protocol TableViewReorderDelegate: class {
 
 public extension TableViewReorderDelegate {
     
-    func tableView(_ tableView: UITableView, canReorderRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canReorderRowAt indexPath: IndexPath, touchPosition: CGPoint) -> Bool {
         return true
     }
     
@@ -233,7 +233,7 @@ public class ReorderController: NSObject {
         let tableTouchPosition = superview.convert(touchPosition, to: tableView)
         
         guard let sourceRow = tableView.indexPathForRow(at: tableTouchPosition),
-            delegate.tableView(tableView, canReorderRowAt: sourceRow)
+              delegate.tableView(tableView, canReorderRowAt: sourceRow, touchPosition: touchPosition)
         else { return }
         
         createSnapshotViewForCell(at: sourceRow)
